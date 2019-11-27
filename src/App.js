@@ -65,7 +65,6 @@ function App() {
 
   const getProductOneByOne = async () => {
     const pages = createNumberPages(); // 100 page, from 1 to 100
-    console.log("pages: ", pages);
 
     const startTime = Date.now();
     for (let i = 0; i < pages.length; i += 1) {
@@ -83,7 +82,9 @@ function App() {
       const pageBatch = pages.slice(i, i + batch);
       let promises = [];
       pageBatch.map(page => promises.push(getProducts(page)));
-      await Promise.all(promises.map(p => p.catch(e => e)));
+      await Promise.all(
+        promises.map(p => p.catch(e => ({ e, status: "rejected" }))) // to filter with status is not rejected
+      );
     }
     const endTime = Date.now();
     return alert(endTime - startTime);
@@ -95,7 +96,9 @@ function App() {
     pages.map(page => promises.push(getProducts(page)));
 
     const startTime = Date.now();
-    Promise.all(promises.map(p => p.catch(e => e))).then(res => {
+    Promise.all(
+      promises.map(p => p.catch(e => ({ e, status: "rejected" }))) // to filter with status is not rejected
+    ).then(res => {
       const endTime = Date.now();
       return alert(endTime - startTime);
     });
