@@ -50,22 +50,30 @@ function App() {
     alert(endTime - startTime);
   };
 
-  const skus = [
-    "191100707",
-    "191100706",
-    "191100705",
-    "191100701",
-    "191100702",
-    "191100699",
-    "1202938",
-    "191100697",
-    "191100695",
-    "191100756"
-  ];
+  const createSkuList = n => {
+    const skus = [
+      "191100707",
+      "191100706",
+      "191100705",
+      "191100701",
+      "191100702",
+      "191100699",
+      "1202938",
+      "191100697",
+      "191100695",
+      "191100756"
+    ];
+    let array = [];
+    for (let i = 0; i < n; i++) {
+      array = [...array, ...skus];
+    }
+    return array;
+  };
 
   const getAllProduct = () => {
+    const listSku = createSkuList(100);
     const startTime = Date.now();
-    getProducts(skus).then(response => {
+    getProducts(listSku).then(response => {
       if (response) {
         const endTime = Date.now();
         alert(endTime - startTime);
@@ -73,23 +81,43 @@ function App() {
     });
   };
 
+  const createSkuBatchs = () => {
+    const skuBatchs = [];
+    const skuList = createSkuList(100);
+    for (let i = 0; i < skuList.length; i += 10) {
+      let skus = skuList.slice(i, i + 10);
+      skuBatchs.push(skus);
+    }
+    return skuBatchs;
+  };
+
   const getProductsByBatch = () => {
     let promises = [];
-    skus.map(sku => promises.push(getProduct(sku)));
+    const skuBatchs = createSkuBatchs();
+    skuBatchs.map(skus => promises.push(getProducts(skus)));
+
     const startTime = Date.now();
     Promise.all(promises.map(p => p.catch(e => e))).then(res => {
-      if (res) {
-        const endTime = Date.now();
-        alert(endTime - startTime);
-      }
+      const endTime = Date.now();
+      return alert(endTime - startTime);
     });
+  };
+
+  const getProductOneByOne = async () => {
+    const skuBatchs = createSkuBatchs();
+    const startTime = Date.now();
+    for (let i = 0; i < skuBatchs.length; i++) {
+      await getProducts(skuBatchs[i]);
+    }
+    const endTime = Date.now();
+    return alert(endTime - startTime);
   };
 
   // initial code
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
+        {/* <img src={logo} className="App-logo" alt="logo" />
         <p>
           Edit <code>src/App.js</code> and save to reload.
         </p>
@@ -100,13 +128,16 @@ function App() {
           rel="noopener noreferrer"
         >
           Learn React
-        </a>
+        </a> */}
         <div>
-          <button type="button" onClick={getProductsByBatch}>
-            use Promise All
-          </button>
           <button type="button" onClick={getAllProduct}>
-            use Promise
+            call 1 api
+          </button>
+          <button type="button" onClick={getProductOneByOne}>
+            get product one by one
+          </button>
+          <button type="button" onClick={getProductsByBatch}>
+            get products by batch
           </button>
         </div>
       </header>
