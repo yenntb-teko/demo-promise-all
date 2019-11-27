@@ -1,6 +1,7 @@
 import React from "react";
 import logo from "./logo.svg";
 import "./App.css";
+import { getProducts, getProduct } from "./service";
 
 function App() {
   // demo promise
@@ -62,6 +63,28 @@ function App() {
     "191100756"
   ];
 
+  const getAllProduct = () => {
+    const startTime = Date.now();
+    getProducts(skus).then(response => {
+      if (response) {
+        const endTime = Date.now();
+        alert(endTime - startTime);
+      }
+    });
+  };
+
+  const getProductsByBatch = () => {
+    let promises = [];
+    skus.map(sku => promises.push(getProduct(sku)));
+    const startTime = Date.now();
+    Promise.all(promises.map(p => p.catch(e => e))).then(res => {
+      if (res) {
+        const endTime = Date.now();
+        alert(endTime - startTime);
+      }
+    });
+  };
+
   // initial code
   return (
     <div className="App">
@@ -79,10 +102,10 @@ function App() {
           Learn React
         </a>
         <div>
-          <button type="button" onClick={callPromiseAll}>
+          <button type="button" onClick={getProductsByBatch}>
             use Promise All
           </button>
-          <button type="button" onClick={callPromise}>
+          <button type="button" onClick={getAllProduct}>
             use Promise
           </button>
         </div>
