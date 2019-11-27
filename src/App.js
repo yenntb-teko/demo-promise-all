@@ -131,14 +131,29 @@ function App() {
           Learn React
         </a> */}
         <div>
-          <button type="button" onClick={() => getProductOneByOne()}>
-            get product one by one
+          <button
+            className="style-btn"
+            style={{ backgroundColor: "#c34848" }}
+            type="button"
+            onClick={() => getProductOneByOne()}
+          >
+            Get product one by one
           </button>
-          <button type="button" onClick={() => getProductsByBatch(batch10)}>
-            get products by batch 10
+          <button
+            className="style-btn"
+            style={{ backgroundColor: "#3cd22f" }}
+            type="button"
+            onClick={() => getProductsByBatch(batch10)}
+          >
+            {`Get products by batch ${batch10}`}
           </button>
-          <button type="button" onClick={() => getAllProductsOneTime()}>
-            get all products one time
+          <button
+            className="style-btn"
+            style={{ backgroundColor: "black" }}
+            type="button"
+            onClick={() => getAllProductsOneTime()}
+          >
+            Get all products one time
           </button>
         </div>
       </header>
